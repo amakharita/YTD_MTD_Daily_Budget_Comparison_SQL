@@ -1,4 +1,4 @@
-USE bapu 
+USE XXX 
 GO
 
 DROP TABLE DailyPremiumBudgetComparison
@@ -17,9 +17,9 @@ CREATE TABLE #results1 (Product VARCHAR(20),
 INSERT INTO #results1
 
 SELECT CASE WHEN A.product = 'Package - Fine Art' 
-            THEN 'Package – FA' 
+            THEN 'Package â€“ FA' 
             WHEN A.product = 'Package - Jewelers Block' 
-            THEN 'Package – JB'
+            THEN 'Package â€“ JB'
             ELSE A.product 
        END AS product, 
        A.Month_Number, 
@@ -57,12 +57,12 @@ SELECT CASE WHEN s2.product like '%Jeweller%'
             WHEN s2.product = 'General Specie'
             THEN 'Specie'
             WHEN s2.product = 'Pawnbrokers'
-			THEN  'Jewelers Block'
-	        ELSE s2.product
+      THEN  'Jewelers Block'
+          ELSE s2.product
        END AS 'Product',
        SUM(s2.ggwp) Daily_Premium 
 INTO #t2
-FROM bapu_syndicate.dbo.syndicate s2
+FROM XXX_syndicate.dbo.syndicate s2
     LEFT JOIN primaryit.dbo.dim_Date dd 
     ON CAST(GETDATE() as DATE) = dd.FullDate
 
@@ -71,18 +71,18 @@ FROM bapu_syndicate.dbo.syndicate s2
 WHERE writtendate >=  CASE WHEN dd.IsFirstBusinessDayOfMonth = 'Y' 
                            --When 1st business day of  month reflect last day of the prev month 
                            --(logic pulls last day of previous month)
-						   THEN CAST(DATEADD(DAY, -(DAY(GETDATE())), GETDATE()) as DATE) 
-						   WHEN DATEPART(DW,GETDATE()) = 2 THEN CAST(GETDATE() - 3  as DATE)
-						   ELSE CAST(GETDATE() - 1 as DATE) 
+               THEN CAST(DATEADD(DAY, -(DAY(GETDATE())), GETDATE()) as DATE) 
+               WHEN DATEPART(DW,GETDATE()) = 2 THEN CAST(GETDATE() - 3  as DATE)
+               ELSE CAST(GETDATE() - 1 as DATE) 
                       END
 
 AND writtendate < CASE WHEN dd.IsFirstBusinessDayOfMonth = 'Y' 
                        --When 1st business day of the month reflect last day of prev month 
                        --(logic pulls 1st day of current month)
                        THEN CAST(DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) as DATE)
-					   WHEN DATEPART(DW,GETDATE()) = 2  
-					   THEN CAST(GETDATE() - 2 as DATE)
-				       ELSE  CAST(GETDATE() as DATE)   
+             WHEN DATEPART(DW,GETDATE()) = 2  
+             THEN CAST(GETDATE() - 2 as DATE)
+               ELSE  CAST(GETDATE() as DATE)   
                   END
 
 AND MONTH(d_book) = --When 1st business day of month and January look at December
@@ -122,7 +122,7 @@ SELECT CASE WHEN s4.product like '%Jeweller%'
        SUM(ggwp) MTD_Premium
 
 INTO #t4
-FROM bapu_syndicate.dbo.syndicate s4
+FROM XXX_syndicate.dbo.syndicate s4
     LEFT JOIN primaryit.dbo.dim_Date dd 
 ON CAST(GETDATE() as DATE) = dd.FullDate
 WHERE MONTH(d_book) = CASE WHEN dd.IsFirstBusinessDayOfMonth = 'Y'  
@@ -160,7 +160,7 @@ SELECT CASE WHEN s5.product like '%Jeweller%'
             ELSE s5.product
        END AS 'Product', SUM(ggwp) YTD_Premium 
 INTO #t5
-FROM bapu_syndicate.dbo.syndicate s5
+FROM XXX_syndicate.dbo.syndicate s5
     LEFT JOIN primaryit.dbo.dim_Date dd 
     ON CAST(GETDATE() as DATE) = dd.FullDate
     /***changed per Craig via meeting 05/03/2015*****/   
